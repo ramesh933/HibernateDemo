@@ -1,0 +1,168 @@
+date : 24-2-2021
+
+Hibernate user i/p task:
+
+package dao1;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import pojo1.Features;
+
+import java.util.Scanner;
+
+public class Inputdetails {
+	public static void main(String[] args) {
+	
+	 Configuration con = new Configuration();
+     
+     con.configure("hibernateuserinput.cfg.xml");
+     
+     SessionFactory sf = con.buildSessionFactory();
+     
+     Session s = sf.openSession();
+     
+     Transaction tr = s.beginTransaction();
+     
+     Scanner sc = new Scanner(System.in);
+     
+        String emailAdmin = "admin@datamatrixsolution.com";
+		String pwdAdmin = "admin@123";
+		System.out.println("Hello admin Login Now");
+
+		System.out.println("Enter the Email");
+		String email = sc.next();
+		System.out.println("Enter the password");
+		String pwd = sc.next();
+		
+		int opt;
+		
+		if(email.equals(emailAdmin) && pwd.equals(pwdAdmin)) {
+			System.out.println("Hello Admin");
+			System.out.println("login sucessfull");
+			System.out.println("1.Add user details ");
+			System.out.println("2.Update user details");
+			System.out.println("3.Delete user details");
+			
+			System.out.println("Select your option");
+			
+			opt = sc.nextInt();
+			
+			if(opt == 1) {
+				
+				Features f = new Features();
+				System.out.println("enter id");
+				int id = sc.nextInt();
+				f.setId(id);
+				System.out.println("enter name");
+				String name = sc.next();
+				f.setName(name);
+				System.out.println("enter age");
+				int age = sc.nextInt();
+				f.setAge(age);
+				System.out.println("enter department");
+				String dept = sc.next();
+				f.setDeptarment(dept);
+				System.out.println("enter location");
+				String loc = sc.next();
+				f.setId(id);
+				System.out.println("enter salary");
+				int salary = sc.nextInt();
+				f.setSalary(salary);
+				
+				s.save(f);
+				System.out.println("added sucessfullly");
+			}
+			
+			if(opt == 2) {
+				System.out.println("1.Update your Name");
+				System.out.println("2.Update your Age");
+				System.out.println("3.Update your Department");
+				System.out.println("4.Update your Location");
+				System.out.println("5.Update your Salary");
+				
+				System.out.println("Select your option");
+				
+				int field;
+				field = sc.nextInt();
+				
+				if(field == 1) {
+					Features f1 = new Features();
+					System.out.println("enter id");
+					int id = sc.nextInt();
+					f1 = s.load(Features.class, id);
+					System.out.println("update user name");
+					String name=sc.next();
+					f1.setName(name);
+					s.update(f1);
+					System.out.println("Updated sucessfully");
+				}
+				
+				if(field == 2) {
+					Features f2 = new Features();
+					System.out.println("enter id");
+					int id = sc.nextInt();
+					f2 = s.load(Features.class, id);
+					System.out.println("update user age");
+					int age=sc.nextInt();
+					f2.setAge(age);
+					s.update(f2);
+					System.out.println("Updated sucessfully");
+				}
+				
+				if(field == 3) {
+					Features f3 = new Features();
+					System.out.println("enter id");
+					int id = sc.nextInt();
+					f3 = s.load(Features.class, id);
+					System.out.println("update user Department");
+					String Department=sc.next();
+					f3.setDeptarment(Department);
+					s.update(f3);
+					System.out.println("Updated sucessfully");
+				}
+				
+				if(field == 4) {
+					Features f4 = new Features();
+					System.out.println("enter id");
+					int id = sc.nextInt();
+					f4 = s.load(Features.class, id);
+					System.out.println("update user location");
+					String location=sc.next();
+					f4.setLocation(location);
+					s.update(f4);
+					System.out.println("Updated sucessfully");
+				}
+				
+				if(field == 5) {
+					Features f5 = new Features();
+					System.out.println("enter id");
+					int id = sc.nextInt();
+					f5 = s.load(Features.class, id);
+					System.out.println("update user salary");
+					int salary=sc.nextInt();
+					f5.setSalary(salary);
+					s.update(f5);
+					System.out.println("Updated sucessfully");
+				}
+				
+				if(opt == 3) {
+					Features fea = new Features();
+					System.out.println("enter id to delete");
+					int id = sc.nextInt();
+					fea.setId(id);
+					s.delete(fea);
+					System.out.println("deleted sucessfully");
+				}
+			}
+			else {
+				System.out.println("details not found");
+			}
+			tr.commit();
+			s.close();
+			sf.close();
+		}
+}
+}

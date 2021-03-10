@@ -1,0 +1,370 @@
+                                   
+
+1.POJO class:-
+
+
+package pojo;
+
+public class UserTask {
+    private int id;
+    private String name;
+    private String email;
+    private String password;
+    private String location;
+    private String department;
+    private int salary;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getDepartment() {
+		return department;
+	}
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+	public int getSalary() {
+		return salary;
+	}
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}   
+}
+
+
+2.XML file--Mapping:-
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "pojo.UserTask" table = "user">
+      
+      
+      <id name = "id" >                          
+         <generator class="assigned"/>
+      </id>
+      
+      <property name = "name" />
+      <property name = "email" />
+      <property name = "password" />
+       <property name = "location" />
+       <property name ="department" />
+       <property name = "salary" />
+    
+      
+   </class>
+</hibernate-mapping>
+
+
+3.XML file--Configuration:-
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration SYSTEM 
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+   <session-factory>
+   
+      <property name = "hibernate.dialect"> org.hibernate.dialect.MySQLDialect
+         
+      </property>
+      
+      <property name = "hibernate.connection.driver_class">com.mysql.jdbc.Driver
+         
+      </property>
+
+      <property name = "hibernate.connection.url">jdbc:mysql://localhost:3306/datamatrix
+         
+      </property>
+      
+      <property name = "hibernate.connection.username">root
+         
+      </property>
+      
+      <property name = "hibernate.connection.password">santhosh123
+         
+      </property>
+    
+     
+     <mapping resource="User.hbm.xml"></mapping>    
+   </session-factory>
+</hibernate-configuration>
+
+
+
+4.DAO class:-
+
+package dao;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import pojo.AdminTask;
+import pojo.UserTask;
+
+public class User {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        Configuration con = new Configuration();
+        con.configure("User.cfg.xml");
+        
+        SessionFactory sf = con.buildSessionFactory();
+        
+        Session s = sf.openSession();
+        
+        Transaction tr = s.beginTransaction();		
+		Scanner sc = new Scanner(System.in);
+
+		String emailAdmin = "admin@datamatrixsolution.com";
+		String pwdAdmin = "admin123";
+		System.out.println("Hello admin Login Now");
+
+		System.out.println("Enter the Email");
+		String email1 = sc.next();
+		System.out.println("Enter the password");
+		String pwd1 = sc.next();
+
+		if(email1.equals(emailAdmin) && pwd1.equals(pwdAdmin)) {
+			System.out.println("Hello Admin");
+			System.out.println("Choose any option");
+			System.out.println("1.Register an User");
+			System.out.println("2.Retrive details");
+			System.out.println("3.Update User details");
+			System.out.println("4.Delete user details");
+
+			int option = sc.nextInt();
+
+			if(option == 1) {
+				PreparedStatement prestate1 = conn.prepareStatement("insert into company values(?,?,?,?,?,?,?)");
+
+				System.out.println("Enter the id");
+				int id = sc.nextInt();
+				System.out.println("Enter the name");
+				String name = sc.next();
+				System.out.println("Enter the email");
+				String email = sc.next();
+				System.out.println("Enter the password");
+				String pwd = sc.next();
+				System.out.println("Enter the location");
+				String loc = sc.next();
+				System.out.println("Enter the department");
+				String dept = sc.next();
+				System.out.println("Enter the salary");
+				double salary = sc.nextDouble();
+
+				prestate1.setInt(1, id);
+				prestate1.setString(2, name);
+				prestate1.setString(3, email);
+				prestate1.setString(4, pwd);
+				prestate1.setString(5, loc);
+				prestate1.setString(6, dept);
+				prestate1.setDouble(7, salary);
+
+				prestate1.executeUpdate();
+
+				System.out.println("Your are Registered Successfully");
+			}
+			else if(option == 2) {
+				System.out.println("1.Total details");
+				System.out.println("2.Single User details");
+				System.out.println("3.Details by clolumn name");
+				System.out.println("4.Aggregate functions");
+				int details = sc.nextInt();
+
+				if(details == 1) {
+					PreparedStatement prestate2 = conn.prepareStatement("select * from company");
+
+					ResultSet rs = prestate2.executeQuery();
+					while(rs.next()) {
+						System.out.println(rs.getInt(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getString(5)+" "+rs.getString(6)+" "+rs.getDouble(7));
+					}
+				}else if(details == 2) {
+					PreparedStatement prestate3 = conn.prepareStatement("select * from company where email = ?");
+					System.out.println("Enter the email");
+
+					prestate3.setString(1, sc.next());
+					ResultSet rs1 = prestate3.executeQuery();
+					while(rs1.next()) {
+						System.out.println(rs1.getInt(1)+" "+rs1.getString(2)+" "+rs1.getString(3)+" "+rs1.getString(4)+" "+rs1.getString(5)+" "+rs1.getString(6)+" "+rs1.getDouble(7));
+					}
+				}else if(details == 3) {
+					System.out.println("Enter any field to display");
+					String field = sc.next();
+					if(field.equalsIgnoreCase("name")) {
+						PreparedStatement prestate4 = conn.prepareStatement("select name from company");						
+						ResultSet rs2 = prestate4.executeQuery();
+						while(rs2.next()) {
+							System.out.println(rs2.getString(1));
+						}
+					}else if(field.equalsIgnoreCase("email")) {
+						PreparedStatement prestate5 = conn.prepareStatement("select email from company");						
+						ResultSet rs3 = prestate5.executeQuery();
+						while(rs3.next()) {
+							System.out.println(rs3.getString(1));
+						}
+					}else if(field.equalsIgnoreCase("password")) {
+						PreparedStatement prestate6 = conn.prepareStatement("select password from company");						
+						ResultSet rs4 = prestate6.executeQuery();
+						while(rs4.next()) {
+							System.out.println(rs4.getString(1));
+						}
+					}else if(field.equalsIgnoreCase("location")) {
+						PreparedStatement prestate7 = conn.prepareStatement("select location from company");						
+						ResultSet rs5 = prestate7.executeQuery();
+						while(rs5.next()) {
+							System.out.println(rs5.getString(1));
+						}
+					}else if(field.equalsIgnoreCase("departmnet")) {
+						PreparedStatement prestate8 = conn.prepareStatement("select department from company");						
+						ResultSet rs6 = prestate8.executeQuery();
+						while(rs6.next()) {
+							System.out.println(rs6.getString(1));
+						}
+					}else if(field.equalsIgnoreCase("salary")) {
+						PreparedStatement prestate9 = conn.prepareStatement("select salary from company");						
+						ResultSet rs7 = prestate9.executeQuery();
+						while(rs7.next()) {
+							System.out.println(rs7.getString(1));
+						}
+					}
+				}else if(details == 4) {
+					System.out.println("Enter any Aggregation");
+					String agg = sc.next();
+					if(agg.equalsIgnoreCase("count")) {
+						System.out.println("Total no of records");
+						PreparedStatement ps1 = conn.prepareStatement("select count(email) from company");					
+						ResultSet r1 = ps1.executeQuery();
+						while(r1.next()) {
+							System.out.println(r1.getInt(1));
+						}
+					}else if(agg.equalsIgnoreCase("sum")) {
+						PreparedStatement ps2 = conn.prepareStatement("select sum(salary) from company");	
+						System.out.println("sum of salary");
+						ResultSet r2 = ps2.executeQuery();
+						while(r2.next()) {
+							System.out.println(r2.getInt(1));
+						}
+					}else if(agg.equalsIgnoreCase("min")) {
+						PreparedStatement ps3 = conn.prepareStatement("select min(salary) from company");	
+						System.out.println("minimum of salary");
+						ResultSet r3 = ps3.executeQuery();
+						while(r3.next()) {
+							System.out.println(r3.getInt(1));
+						}
+					}else if(agg.equalsIgnoreCase("max")) {
+						PreparedStatement ps4 = conn.prepareStatement("select max(salary) from company");	
+						System.out.println("maximum of salary");
+						ResultSet r4 = ps4.executeQuery();
+						while(r4.next()) {
+							System.out.println(r4.getInt(1));
+						}
+					}
+				}
+			}else if(option == 3) {
+				System.out.println("Update user details");
+				System.out.println("Enter User email");
+				String email2 = sc.next();
+				System.out.println("1. for name");
+				System.out.println("2. for password ");
+				System.out.println("3. for location");
+				System.out.println("4. for department");
+				System.out.println("5. for salary");
+				System.out.println("select any field to update");
+				int field1 = sc.nextInt();
+				if(field1 == 1) {
+					PreparedStatement p1 = conn.prepareStatement("update company set name = ? where email = ? ");
+					System.out.println("Update  name");
+					p1.setString(1, sc.next());
+					p1.setString(2,email2);
+					p1.executeUpdate();
+					System.out.println("User name is updated");
+				}else if(field1 == 2) {
+					PreparedStatement p2 = conn.prepareStatement("Update company set password = ? where email = ?");
+					System.out.println("Update password");
+					p2.setString(1, sc.next());
+					p2.setString(2, email2);
+					p2.executeUpdate();
+					System.out.println("User password is updated");
+				}else if(field1 == 3) {
+					PreparedStatement p3 = conn.prepareStatement("update company set location = ? where email = ?");
+					System.out.println("Update location");
+					p3.setString(1, sc.next());
+					p3.setString(2, email2);
+					p3.executeUpdate();
+					System.out.println("User location is updated");
+				}else if(field1 == 4) {
+					PreparedStatement p4 = conn.prepareStatement("update company set department = ? where email = ?");
+					System.out.println("Update department");
+					p4.setString(1, sc.next());
+					p4.setString(2, email2);
+					p4.executeUpdate();
+					System.out.println("User department is updated");
+				}else if(field1 == 5) {
+					PreparedStatement p5 = conn.prepareStatement("update company set salary = ? where email = ?");
+					System.out.println("Update Salary");
+					p5.setDouble(1, sc.nextDouble());
+					p5.setString(2,email2);
+					p5.executeUpdate();
+					System.out.println("User salary is updated");
+				}
+
+			}else if(option == 4) {
+				System.out.println("Delete an user account");
+				System.out.println("Enter the email");
+				String email3 = sc.next();
+				PreparedStatement pd = conn.prepareStatement("delete from company where email = ?");
+				pd.setString(1, email3);
+				pd.executeUpdate();
+				System.out.println("User Account is deleted");
+			}
+
+		}else {
+			System.out.println("Invalid Details");
+		}
+
+		
+		
+	}
+
+}

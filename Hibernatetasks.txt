@@ -1,0 +1,304 @@
+                      Manonjna D                    2/26/2021
+
+1.POJO class:-
+
+
+package pojo;
+
+public class Useri/pTask {
+    private int id;
+    private String name;
+    private String email;
+    private String password;
+    private String location;
+    private int salary;
+   
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public int getSalary() {
+		return salary;
+	}
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}   
+}
+
+
+2.XML file--Mapping:-
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "pojo.Useri/pTask" table = "userdetails">
+      
+      
+      <id name = "id" >                          
+         <generator class="assigned"/>
+      </id>
+      
+      <property name = "name" />
+      <property name = "email" />
+      <property name = "password" />
+       <property name = "location" />
+       <property name = "salary" />
+    
+      
+   </class>
+</hibernate-mapping>
+
+
+3.XML file--Configuration:-
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration SYSTEM 
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+   <session-factory>
+   
+      <property name = "hibernate.dialect"> org.hibernate.dialect.MySQLDialect
+         
+      </property>
+      
+      <property name = "hibernate.connection.driver_class">com.mysql.jdbc.Driver
+         
+      </property>
+
+      <property name = "hibernate.connection.url">jdbc:mysql://localhost:3306/datamatrix
+         
+      </property>
+      
+      <property name = "hibernate.connection.username">root
+         
+      </property>
+      
+      <property name = "hibernate.connection.password">manu98
+         
+      </property>
+    
+     
+     <mapping resource="Userdetails.hbm.xml"></mapping>    
+   </session-factory>
+</hibernate-configuration>
+
+
+
+4.DAO class:-
+
+package dao;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import pojo.AdminTask;
+import pojo.Useri/pTask;
+
+public class User {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        Configuration con = new Configuration();
+        con.configure("Userdetails.cfg.xml");
+        
+        SessionFactory sf = con.buildSessionFactory();
+        
+        Session s = sf.openSession();
+        
+        Transaction tr = s.beginTransaction();
+        
+        Scanner sc = new Scanner(System.in);
+        String back = null;
+        do {
+        System.out.println("1.Register");
+		System.out.println("2.Login");
+		System.out.println("Enter an option");
+		int option = sc.nextInt();
+		
+		if(opt == 1) {
+			Useri/pTask ut = new Useri/pTask();
+			
+			System.out.println("Register your account");
+			
+			System.out.println("Enter the id");
+			int id = sc.nextInt();
+			ut.setId(id);
+			
+			System.out.println("Enter the name");
+			String name = sc.next();
+			ut.setName(name);
+			
+			System.out.println("Enter the email");
+			String email = sc.next();
+			ut.setEmail(email);
+			
+			System.out.println("Enter the password");
+			String pwd = sc.next();
+			ut.setPassword(pwd);
+			
+			System.out.println("Enter the location");
+			String loc = sc.next();
+			u.setLocation(loc);
+			
+			System.out.println("Enter the salary");
+			int salary = sc.nextInt();
+			ut.setSalary(salary);
+			
+			s.save(u);
+			System.out.println("Registered Successfully");
+		}
+		if(opt == 2) {
+			System.out.println("Enter the email");
+			String email1 = sc.next();
+			System.out.println("Enter the password");
+			String pwd1 = sc.next();
+			
+			Query q = s.createQuery("from UserTask");
+			List l = q.list();
+			Iterator<UserTask> itr = l.iterator();
+			while(itr.hasNext()) {
+				UserTask ut = (UserTask) itr.next();
+				String user1 = ut.getEmail();
+				String password = ut.getPassword();
+				
+
+				
+				if(email1.equals(user1) && pwd1.equals(password)) {
+					System.out.println("login successfull");
+                                        System.out.println("select an option");
+					System.out.println("1.My details");
+					System.out.println("2.Update details");
+					System.out.println("3.Delete my account");
+					
+					int  opt1 = sc.nextInt();
+					
+					if(opt1 == 1) {
+						Query q1 = s.createQuery("from UserTask where email = email");
+						q1.setParameter("email", user1);
+						List l1 = q1.getResultList();
+						Iterator<UserTask> itr1 = l1.iterator();
+						while(itr1.hasNext()) {
+							Useri/pTask ut1 = (UserTask) itr1.next();
+							System.out.println(ut1.getId()+" "+ut1.getName()+" "+ut1.getEmail()+" "+ut1.getPassword()+" "+ut1.getLocation()+" "+ut1.getSalary());
+						}
+					}
+					
+ 
+					
+					if(opt1 == 2) {
+						System.out.println("select a field to update");
+						System.out.println("1. for name");
+						System.out.println("2. for password ");
+						System.out.println("3. for location");
+						System.out.println("5. for salary");
+						
+						int opt2 = sc.nextInt();
+						
+						if(opt2 == 1) {
+							
+							Useri/pTask ud1 = new UserTask();
+							ud1 = s.load(UserTask.class,new Integer(ut.getId()));
+							System.out.println("Update name");
+							String name = sc.next();
+							ud1.setName(name);
+					
+						    System.out.println("Name Updated Successfully");
+						}
+                        if(opt2 == 2) {
+							
+							Useri/pTask ud2 = new UserTask();
+							ud2 =s.load(UserTask.class,new Integer(ut.getId()));
+							System.out.println("Update Password");
+							String pwd = sc.next();
+							ud2.setPassword(pwd);
+						    
+						    System.out.println("Password Updated Successfully");
+						}
+                        if(opt2 == 3) {
+							
+							Useri/pTask ud3 = new UserTask();
+							ud3 =s.load(UserTask.class,new Integer(ut.getId()));
+							System.out.println("Update Location");
+							String loc = sc.next();
+							ud3.setLocation(loc);
+						    
+						    System.out.println("Location Updated Successfully");
+						}
+                        
+                        if(opt2 == 4) {
+							
+							Useri/pTask ud5 = new UserTask();
+							ud5 =s.load(UserTask.class,new Integer(ut.getId()));
+							System.out.println("Update Salary");
+							int salary = sc.nextInt();
+							ud5.setSalary(salary);
+						    
+						    System.out.println("Salary Updated Successfully");
+						}
+					}
+					
+
+					
+					if(opt1 == 3) {
+						Query q2 = s.createQuery("delete from UserTask where email = :email");
+						q2.setParameter("email", user1);
+						q2.executeUpdate();
+						System.out.println(ut.getName()+" Your account is deleted successfully");
+					}
+				}
+				else {
+					System.out.println("Invalid details");
+				}
+			}
+		}
+		
+		tr.commit();
+		s.close();
+		sf.close();
+	
+        }
+	}
+	
+
+}

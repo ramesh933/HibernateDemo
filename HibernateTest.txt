@@ -1,0 +1,121 @@
+
+HibernateTest
+
+Date : 4/3/2021   Manojna.D
+
+
+package daoo1;
+
+import java.util.*;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
+
+import pojoo1.EmployeeValues;
+
+public class QueriesCode {
+	public static void main(String[] args) {
+		Configuration Con = new Configuration();
+		
+		Con.configure("EmployeeValues.cfg.xml");
+		
+		SessionFactory sf = Con.buildSessionFactory();
+		
+		Session s = sf.openSession();
+		
+		Transaction tr = s.beginTransaction();
+		
+			Query q1 = s.createQuery("update EmployeeValues set id = :id where name=:n");
+			
+			q1.setParameter("id", 114);
+			q1.setParameter("n", "Arun" );
+			q1.executeUpdate();
+			System.out.println("id updated sucessfully");
+			
+			
+	      Criteria c = s.createCriteria(EmployeeValues.class);
+	      c.add(Restrictions.gt("salary", 35000));
+	      List l = c.list();
+	      Iterator<EmployeeValues> i = l.iterator();
+	      System.out.println("Details of people who are getting more than 35000 ");
+	      while(i.hasNext()) {	    	  
+	    	  EmployeeValues e = (EmployeeValues) i.next();
+	    	  System.out.println(e.getId()+" "+e.getName()+" "+e.getSalary()+" "+e.getExperience()+" "+e.getLocation());
+	      }
+	      
+	      Criteria c1 = s.createCriteria(EmployeeValues.class);
+	      c1.add(Restrictions.between("experience", 2, 3));
+	      List l1 = c1.list();
+	      Iterator<EmployeeValues> i1 = l1.iterator();
+	      System.out.println("Employee details aving experience between 2 to 3 years");
+	      while(i1.hasNext()) {
+	    	  EmployeeValues e1 = (EmployeeValues)i1.next();
+	    	  System.out.println(e1.getId()+" "+e1.getName()+" "+e1.getSalary()+" "+e1.getExperience()+" "+e1.getLocation());
+	    	 }
+	      
+	      Criteria c2 = s.createCriteria(EmployeeValues.class);
+	      c2.add(Restrictions.like("location", "chennai"));
+	      List l2 = c2.list();
+	      Iterator<EmployeeValues> i2 = l2.iterator();
+	      System.out.println("Employee name and salary who are working in chennai location");
+	      while(i2.hasNext()) {
+	    	  EmployeeValues e2 = (EmployeeValues)i2.next();
+	    	  System.out.println(e2.getName()+" "+e2.getSalary());
+	    	}
+	      
+	      Criteria c3 = s.createCriteria(EmployeeValues.class);
+	      List l3 = c3.list();
+	      Iterator<EmployeeValues> i3 = l3.iterator();
+	      System.out.println("Name,Salary and Experience details of employees");
+	      while(i3.hasNext()) {
+	    	  EmployeeValues e3 = (EmployeeValues)i3.next();
+	    	  System.out.println(e3.getName()+" "+e3.getSalary()+" "+e3.getExperience());
+	    	}
+	      
+	      Criteria c4 = s.createCriteria(EmployeeValues.class);
+	      c4.setProjection(Projections.avg("salary"));
+	      c4.setProjection(Projections.min("experience"));
+	      List l4= c4.list();
+	      Iterator<EmployeeValues> i4 = l4.iterator();
+	      System.out.println("avg salary and max age details of employees");
+	      while(i4.hasNext()) {
+	    	 System.out.println(i4.next());
+	    	}
+	      
+	      Query q2 = s.createQuery("update EmployeeValues set name = :name ,location = :loc where id=:id");
+			
+			q2.setParameter("name", "ramesh");
+			q2.setParameter("loc", "Bangalore");
+			q2.setParameter("id", 104 );
+			q2.executeUpdate();
+			System.out.println("name and location updated sucessfully");
+			
+			Criteria c5 = s.createCriteria(EmployeeValues.class);
+			
+			c5.addOrder(Order.asc("salary"));
+		      List l5 = c5.list();
+		      Iterator<EmployeeValues> i5 = l5.iterator();
+		      System.out.println("Employee details in ascending order");
+		      while(i5.hasNext()) {
+		    	  EmployeeValues e5 = (EmployeeValues)i5.next();
+		    	  System.out.println(e5.getName()+" "+e5.getSalary()+" "+e5.getExperience());
+		    	}
+	      
+	      
+	      
+	      
+			tr.commit();
+			s.close();
+			sf.close();
+		
+		
+	}
+
+}
